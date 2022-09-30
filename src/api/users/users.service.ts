@@ -11,10 +11,11 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
+  private jwtService;
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private jwtService: JwtService
+    jwtService: JwtService
     // @Inject(forwardRef(() => JwtService)) private jwtService: JwtService
   ) { }
 
