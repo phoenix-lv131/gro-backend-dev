@@ -11,11 +11,10 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  private jwtService;
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    jwtService: JwtService
+    private jwtService: JwtService
     // @Inject(forwardRef(() => JwtService)) private jwtService: JwtService
   ) { }
 
@@ -62,43 +61,45 @@ export class UsersService {
       const { password, ...result } = user;
 
       const payload = { email: user.email, sub: user.id };
-      // const { accessToken, refreshToken } = await this.getTokens(payload);
-      // // await this.usersService.setRefreshToken(refreshToken, user._id);
-      // return {
-      //   msg: accessToken,
-      //   status: 1,
-      //   refresh_token: refreshToken,
-      //   token_type: "Bearer",
-      //   expires_in: process.env.JWT_EXPIRATION_TIME,
-      //   user
-      // };
+      // return this.jwtService.sign(payload, { expiresIn: '24h', secret: process.env['JWT_SECRET_KEY'] });
+      // const jwt = await this.jwtService.signAsync(payload)
+      const { accessToken, refreshToken } = await this.getTokens(payload);
+      // await this.usersService.setRefreshToken(refreshToken, user._id);
+      return {
+        msg: accessToken,
+        status: 1,
+        refresh_token: refreshToken,
+        token_type: "Bearer",
+        expires_in: process.env.JWT_EXPIRATION_TIME,
+        user
+      };
     } else {
       throw new BadRequestException('Password not matched');
     }
   }
 
   async getTokens(payload: any) {
-    // const [accessToken, refreshToken] = await Promise.all([
-    //   this.jwtService.signAsync(
-    //     payload,
-    //     {
-    //       secret: process.env.JWT_SECRET_KEY,
-    //       expiresIn: process.env.JWT_EXPIRATION_TIME
-    //     },
-    //   ),
-    //   this.jwtService.signAsync(
-    //     payload,
-    //     {
-    //       secret: process.env.JWT_REFRESH_TOKEN_PRIVATE_KEY,
-    //       expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
-    //     },
-    //   ),
-    // ]);
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: process.env.JWT_SECRET_KEY,
+          expiresIn: process.env.JWT_EXPIRATION_TIME
+        },
+      ),
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: process.env.JWT_REFRESH_TOKEN_PRIVATE_KEY,
+          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
+        },
+      ),
+    ]);
 
-    // return {
-    //   accessToken,
-    //   refreshToken,
-    // };
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   findAll() {

@@ -21,9 +21,8 @@ export class AuthController {
     })
     @ApiResponse({ status: 200, type: SignupResponseDTO, description: "Verify your email" })
     @ApiResponse({ status: 400, type: ErrorResponseDTO, description: "Validation error" })
-    async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-        this.authService.create(createUserDto)
-        return res.json({ success: 'true' })
+    async register(@Body() createUserDto: CreateUserDto) {
+        return this.authService.create(createUserDto)
     }
 
     @Post('login')
@@ -33,8 +32,7 @@ export class AuthController {
     })
     @ApiResponse({ status: 200, type: LoginResponseDTO, description: "Verify your email" })
     @ApiResponse({ status: 400, type: ErrorResponseDTO, description: "Validation error" })
-    async login(@Body() loginUserDto: UserLoginDto, @Res() res: Response) {
-        this.authService.login(loginUserDto)
-        return res.json({ success: 'true' })
+    async login(@Body() loginUserDto: UserLoginDto) {
+        return this.authService.login(loginUserDto)
     }
 }

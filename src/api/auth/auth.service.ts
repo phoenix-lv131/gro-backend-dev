@@ -14,11 +14,11 @@ export class AuthService {
     }
 
     async create(createUserDto) {
-        this.usersService.create(createUserDto)
+        return this.usersService.create(createUserDto)
     }
 
     async login(loginUserDto) {
-        this.usersService.login(loginUserDto)
+        return this.usersService.login(loginUserDto)
     }
     
 }
