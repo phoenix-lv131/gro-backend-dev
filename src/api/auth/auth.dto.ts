@@ -65,10 +65,16 @@ export class UserLoginDto {
     @IsNotEmpty()
     @ApiProperty()
     email: string;
-  
+
     @IsString()
     @IsNotEmpty()
     @ApiProperty()
     password: string;
-  }
-  
+}
+
+export class GoogleLoginDto {
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty()
+    token: string;
+}

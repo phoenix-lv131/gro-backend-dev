@@ -60,7 +60,7 @@ export class UsersService {
     if (isMatch) {
       const { password, ...result } = user;
 
-      const payload = { email: user.email, sub: user.id };
+      const payload = { email: user.email };
       // return this.jwtService.sign(payload, { expiresIn: '24h', secret: process.env['JWT_SECRET_KEY'] });
       // const jwt = await this.jwtService.signAsync(payload)
       const { accessToken, refreshToken } = await this.getTokens(payload);
@@ -100,6 +100,28 @@ export class UsersService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async googlelogin(googleLoginDto) {
+    const { token } = googleLoginDto
+    const { OAuth2Client } = require('google-auth-library');
+    const client = new OAuth2Client("1005932503367-osvfl6ems32qs49bsgjfkfcv9geudq9s.apps.googleusercontent.com");
+    async function verify() {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: "1005932503367-osvfl6ems32qs49bsgjfkfcv9geudq9s.apps.googleusercontent.com",  // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+      // const userid = payload['sub'];
+      const { iss, sub, azp, aud, iat, exp, email, email_verified, name, picture, given_name, family_name, locale } = payload
+      // TODO with response data
+      
+      // If request specified a G Suite domain:
+      // const domain = payload['hd'];
+    }
+    verify().catch(console.error);
   }
 
   findAll() {

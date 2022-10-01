@@ -21,4 +21,8 @@ export class AuthService {
         return this.usersService.login(loginUserDto)
     }
     
+    async googlelogin(googleLoginDto) {
+        return this.usersService.googlelogin(googleLoginDto)
+    }
+    
 }

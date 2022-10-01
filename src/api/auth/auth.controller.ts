@@ -3,7 +3,7 @@ import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { LoginResponseDTO, SignupResponseDTO, UserLoginDto } from './auth.dto';
+import { GoogleLoginDto, LoginResponseDTO, SignupResponseDTO, UserLoginDto } from './auth.dto';
 import { ErrorResponseDTO } from 'src/shared/dto/error.response.dto';
 
 @ApiTags("Auth")
@@ -34,5 +34,16 @@ export class AuthController {
     @ApiResponse({ status: 400, type: ErrorResponseDTO, description: "Validation error" })
     async login(@Body() loginUserDto: UserLoginDto) {
         return this.authService.login(loginUserDto)
+    }
+
+    @Post('social/google')
+    @ApiOperation({
+        summary: "Google login endpoint.",
+        description: "Google login"
+    })
+    @ApiResponse({ status: 200, type: LoginResponseDTO, description: "Verify your email" })
+    @ApiResponse({ status: 400, type: ErrorResponseDTO, description: "Validation error" })
+    async login_google(@Body() googleLoginDto: GoogleLoginDto) {
+        return this.authService.googlelogin(googleLoginDto)
     }
 }
